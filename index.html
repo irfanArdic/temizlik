@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Cihaz Temizle</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:Arial,sans-serif;background:linear-gradient(135deg,#1a1a2e,#16213e);min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px;}
+.box{background:#fff;border-radius:22px;padding:28px 24px;max-width:320px;width:100%;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.4);}
+.logo{font-size:44px;margin-bottom:10px;}
+h1{font-size:17px;font-weight:700;color:#1a1a2e;margin-bottom:8px;}
+p{font-size:13px;color:#666;line-height:1.6;margin-bottom:20px;}
+.btn{width:100%;padding:13px;border:none;border-radius:11px;cursor:pointer;font-size:15px;font-weight:700;font-family:inherit;margin-bottom:10px;}
+.btn-red{background:linear-gradient(135deg,#f44336,#d32f2f);color:#fff;}
+.btn-red:active{opacity:.85;}
+.btn-gray{background:#e0e0e0;color:#666;}
+.btn-gray:active{opacity:.85;}
+.sonuc{padding:12px;border-radius:10px;font-size:13px;font-weight:600;margin-top:4px;display:none;}
+.sonuc.ok{background:#c8e6c9;color:#2e7d32;}
+.sonuc.err{background:#ffcdd2;color:#c62828;}
+</style>
+</head>
+<body>
+<div class="box">
+    <div class="logo">&#128260;</div>
+    <h1>Cihaz Kaydini Sifirla</h1>
+    <p>Bu sayfa bu cihazda saklanan kapi sistemi kayit bilgilerini temizler. Temizlendikten sonra davet linkine tiklayinca kayit formu tekrar gelir.</p>
+    <button class="btn btn-red" onclick="temizle()">&#128465; Bu Cihazi Temizle</button>
+    <div class="sonuc" id="sonuc"></div>
+</div>
+<script>
+function temizle(){
+    var silinenler = 0;
+    // Tum kapi_secret_* kayitlarini sil
+    for(var i=0;i<200;i++){
+        if(localStorage.getItem('kapi_secret_'+i)!==null){
+            localStorage.removeItem('kapi_secret_'+i);
+            silinenler++;
+        }
+    }
+    // did'i de sil — tamamen yeni bir cihaz gibi davransin
+    localStorage.removeItem('did');
+
+    var el = document.getElementById('sonuc');
+    if(silinenler>0){
+        el.textContent = '✓ ' + silinenler + ' kayit silindi. Artik davet linkine tikladiginda kayit formu gelecek.';
+        el.className = 'sonuc ok';
+    } else {
+        el.textContent = 'Bu cihazda zaten kayitli bir bilgi yoktu.';
+        el.className = 'sonuc err';
+    }
+    el.style.display = 'block';
+}
+</script>
+</body>
+</html>
