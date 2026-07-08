@@ -32,13 +32,24 @@ p{font-size:13px;color:#666;line-height:1.6;margin-bottom:20px;}
 <script>
 function temizle(){
     var silinenler = 0;
-    // Tum kapi_secret_* kayitlarini sil
-    for(var i=0;i<200;i++){
-        if(localStorage.getItem('kapi_secret_'+i)!==null){
-            localStorage.removeItem('kapi_secret_'+i);
-            silinenler++;
+    // Yeni format: kapi_secret_<chipId>_<slot>, kapi_sid_<chipId>_<slot>
+    var silinecekAnahtarlar = [];
+    for(var i=0;i<localStorage.length;i++){
+        var key = localStorage.key(i);
+        if(key && (key.indexOf('kapi_secret_')===0 || key.indexOf('kapi_sid_')===0)){
+            silinecekAnahtarlar.push(key);
         }
     }
+    silinecekAnahtarlar.forEach(function(key){
+        localStorage.removeItem(key);
+        silinenler++;
+    });
+
+    // Sistem listesini de temizle
+    if(localStorage.getItem('kapi_sistem_listesi')!==null){
+        localStorage.removeItem('kapi_sistem_listesi');
+    }
+
     // did'i de sil — tamamen yeni bir cihaz gibi davransin
     localStorage.removeItem('did');
 
